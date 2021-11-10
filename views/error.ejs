@@ -1,0 +1,6 @@
+extends layout
+
+block content
+  h1= <%=locals.message%>
+  h2= <%=locals.error.status%>
+  pre #<%=error.stack%>
