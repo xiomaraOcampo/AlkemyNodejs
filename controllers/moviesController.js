@@ -90,7 +90,6 @@ let moviesController = {
             res.send("Error")
         })
     }
-
 };
 
 module.exports = moviesController;
