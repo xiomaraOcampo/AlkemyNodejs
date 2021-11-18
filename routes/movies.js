@@ -26,6 +26,10 @@ var storage = multer.diskStorage({
 //Character list
 
 router.get('/', moviesController.list);
+/* 
+router.get('/', moviesController.search);
+ */
+
 
 
 

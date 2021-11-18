@@ -1,18 +1,25 @@
 const db = require('../database/models');
+const { QueryTypes } = require('sequelize');
 
 let moviesController = {
 
 
     list: function (req, res) {
-        db.Movie.findAll({
-            attributes:['imageMovie','title','release_date']
-        })
-        .then(function (result) {
-            res.send(result)
-        }).catch(function (error) {
-            console.log(error)
-            res.send("Error")
-        })
+      
+        
+            db.Movie.findAll({
+            
+                attributes:['imageMovie','title','release_date']
+            })
+            .then(function (result) {
+                res.send(result)
+            }).catch(function (error) {
+                console.log(error)
+                res.send("Error")
+            })
+    
+
+       
     },
 
     create: function (req, res) {
@@ -28,7 +35,7 @@ let moviesController = {
 
     store: function (req, res) {
         db.Movie.create({
-            imageMovie:req.files.length > 0 ? req.files[0].filename : null.imageMovie,
+            imageMovie:req.files.length > 0 ? req.files[0].filename : null.image,
             title: req.body.title,
             genre_id:req.body.genre_id,
             release_date:req.body.release_date,
@@ -89,7 +96,15 @@ let moviesController = {
             console.log(error)
             res.send("Error")
         })
-    }
+    },
+
+   /*  search: async(req,res)=>{
+
+        const movies = await sequelize.query("SELECT * FROM `movies`", { type: QueryTypes.SELECT });
+        console.log(movies);  
+    } */
+
+    
 };
 
 module.exports = moviesController;

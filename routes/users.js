@@ -13,6 +13,9 @@ router.get('/auth/register',usersController.createRegister );
 
 router.post('/auth/register',validations.validRegister,usersController.storeRegister );
 
+router.post('/auth/login',usersController.storeLogin );
+
+
 
 
 

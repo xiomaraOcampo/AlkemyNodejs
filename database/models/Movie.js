@@ -27,7 +27,7 @@ module.exports=function(sequelize,dataTypes){
         },
 
         score:{
-            type:dataTypes.DECIMAL
+            type:dataTypes.DECIMAL(5)
         }
     },{
         tableName:'movies',

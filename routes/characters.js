@@ -27,6 +27,9 @@ var upload = multer({ storage:storage});
   router.get('/', charactersController.list);
 
 
+
+
+
 //CRUD characters
 
   router.get('/create', charactersController.create);
