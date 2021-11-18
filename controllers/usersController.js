@@ -1,5 +1,6 @@
 const db = require('../database/models');
-let { check, validationResult, body } = require('express-validator');
+const bcrypt=require('bcrypt');
+const { check, validationResult, body } = require('express-validator');
 
 let usersController = {
 
@@ -28,7 +29,7 @@ let usersController = {
       id: req.body.id,
       name: req.body.name,
       mail: req.body.mail,
-      password: req.body.password
+      password: bcrypt.hashSync(req.body.password,10)
     };
     let errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -38,9 +39,11 @@ let usersController = {
         "mail": registerUser.mail,
         "password": registerUser.password
       })
+      res.json({
+        msg:'register ok'
+      })
     } else {
-      { errors: errors.errors }// fijarme como puedo hacer para que me muestre los errores abajo en Postman tbn agregar el tipo en el modelo y base de datos de usuarios
-
+      res.status(400).json({ errors: errors.errors })
     }
   },
 
@@ -55,19 +58,29 @@ let usersController = {
 
        db.User.findOne({
         where:{
-          mail:req.body.mail
+          mail:mail
         }
       }).then((resultado)=>{
         console.log(resultado);
-        let existe = resultado != undefined;
+        const existe = resultado != undefined;
         if (!existe) {
           return res.status(400).json({
-            msg:'Usuario/password no son correctos-mail'
-          })
-          
+            msg:'Mail does not exist'
+          }) 
         }
+  
+      // Verficar contraseña
+       const validPassword=bcrypt.compareSync(password,resultado.getDataValue('password'));
+       console.log(validPassword);
+          if (!validPassword) {
+            return res.status(400).json({
+              msg:'Password does not exist'
+            }) 
+          } 
 
-      //verificar la contraseña
+      //Generar el JWT
+
+
 
         res.json({
           msg:'login ok'
