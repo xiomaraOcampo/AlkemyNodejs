@@ -1,6 +1,7 @@
 const db = require('../database/models');
 const bcrypt=require('bcrypt');
 const { check, validationResult, body } = require('express-validator');
+const { generarJWT } = require('../Middleware/generarJWT');
 
 let usersController = {
 
@@ -48,20 +49,20 @@ let usersController = {
   },
 
 
-  storeLogin: function (req, res) {
+  storeLogin:function (req, res) {
 
-    const { mail, password } = req.body;
+    const { id,mail, password,name} = req.body;
    
 
     
-      //Verificar si el mail existe
+      //Verify if the mail exists
 
        db.User.findOne({
         where:{
           mail:mail
         }
       }).then((resultado)=>{
-        console.log(resultado);
+        //console.log(resultado);
         const existe = resultado != undefined;
         if (!existe) {
           return res.status(400).json({
@@ -69,26 +70,27 @@ let usersController = {
           }) 
         }
   
-      // Verficar contraseña
+      // Verify the password
        const validPassword=bcrypt.compareSync(password,resultado.getDataValue('password'));
-       console.log(validPassword);
+      // console.log(validPassword);
           if (!validPassword) {
             return res.status(400).json({
               msg:'Password does not exist'
             }) 
           } 
-
-      //Generar el JWT
-
-
+          console.log(id)
+      //Create JWT
+    //const token= await generarJWT(id);
+   
 
         res.json({
-          msg:'login ok'
+          msg:'Login ok'
+          
         })
       }).catch(function(error){
         console.log(error)
         res.status(500).json({
-          msg:'hable con el administrador'
+          msg:'hable con el administrador' 
         })
       })
 
