@@ -49,51 +49,52 @@ let usersController = {
   },
 
 
-  storeLogin:function (req, res) {
+  storeLogin: async function (req, res) {
 
-    const { id,mail, password,name} = req.body;
-   
+    const { mail, password,name} = req.body;
+    let id = 0;
 
     
-      //Verify if the mail exists
+    //Verify if the mail exists
 
-       db.User.findOne({
-        where:{
-          mail:mail
-        }
-      }).then((resultado)=>{
-        //console.log(resultado);
-        const existe = resultado != undefined;
-        if (!existe) {
-          return res.status(400).json({
-            msg:'Mail does not exist'
-          }) 
-        }
-  
+      db.User.findOne({
+      where:{
+        mail:mail
+      }
+    }).then(async (resultado)=>{
+     
+      const existe = resultado != undefined;
+      if (!existe) {
+        return res.status(400).json({
+          msg:'Mail does not exist'
+        }) 
+      }
+
       // Verify the password
-       const validPassword=bcrypt.compareSync(password,resultado.getDataValue('password'));
-      // console.log(validPassword);
-          if (!validPassword) {
-            return res.status(400).json({
-              msg:'Password does not exist'
-            }) 
-          } 
-          console.log(id)
+      const validPassword=bcrypt.compareSync(password,resultado.getDataValue('password'));
+    
+      if (!validPassword) {
+        return res.status(400).json({
+          msg:'Password does not exist'
+        }) 
+      } 
+      
+      id = resultado.getDataValue('id');
+      console.log(id)
+      
       //Create JWT
-    //const token= await generarJWT(id);
-   
+      const tokn = await generarJWT(id);
+      res.json({
+        uid:id,
+        token: tokn
+      });
 
-        res.json({
-          msg:'Login ok'
-          
-        })
-      }).catch(function(error){
-        console.log(error)
-        res.status(500).json({
-          msg:'hable con el administrador' 
-        })
+    }).catch(function(error){
+      console.log(error)
+      res.status(500).json({
+        msg:'hable con el administrador' 
       })
-
+    });
   }
 };
 

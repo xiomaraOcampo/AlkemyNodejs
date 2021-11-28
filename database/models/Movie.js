@@ -40,19 +40,10 @@ module.exports=function(sequelize,dataTypes){
             foreignKey: 'genre_id'
         });
 
-        Movie.hasMany(models.Character_Movie,{
-            as:"character_movie",
-            foreignKey:"movie_id"
-        });
-    }
-
-    Movie.associate = function (models) {
         Movie.belongsToMany(models.Character, {
             as: 'characters',
             through:'character_movie',
-            foreignKey: 'movie_id',
-            otherKey:'character_id',
-            timestamps:false
+            foreignKey: 'movie_id'
         });
     }
 

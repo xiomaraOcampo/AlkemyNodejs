@@ -5,15 +5,15 @@ let charactersController = {
     list: function (req, res) {
         
         db.Character.findAll({
-            include:{ 
-                model: Movie,
-                as: 'movies',
-                where:{
-                    id: req.query.movies       
-                }
-             },
-            raw: true,
-            nest: true,  
+            // include: [{
+            //     association: "movies",
+            //     required: false,
+            //     where: {id: req.query.movies },
+            //     attributes: ['id'],
+            //     through: { attributes: [] }
+            // }],
+            // raw: true,
+            // nest: true,  
             attributes:['imageCharacter', 'name'],
             where: req.query
         })
@@ -28,9 +28,9 @@ let charactersController = {
 
     create: function (req, res) {
         db.Character.findAll({
-            include: [{ association: "movies" }],
+           /*  include: [{ association: "movies" }],
             raw: true,
-            nest: true,
+            nest: true, */
         })
             .then(function (result) {
                 res.send(result)
@@ -88,8 +88,12 @@ let charactersController = {
         }, {
             where: {
                 id: req.params.id
-            }
+            }    
         })
+        res.json({
+            msg:'character edited'
+          })
+
     },
 
     destroy: function (req, res) {
@@ -98,22 +102,29 @@ let charactersController = {
                 id: req.params.id
             }
         })
+        res.json({
+            msg:'character eliminated'
+          })
 
     },
 
     detail: function (req, res) {
+        
         db.Character.findByPk(req.params.id, {
-            include: [{ association: "movies" }],
-            raw: true,
-            nest: true,
+            
+            include: [{
+                association: "movies",
+                required: false,
+                attributes: ['id', 'title'],
+                through: { attributes: [] }
+            }]
         })
-            .then(function (characterDetail) {
-                res.send(characterDetail)
-                console.log(characterDetail)
-            }).catch(function (error) {
-                console.log(error)
-                res.send("Error")
-            })
+        .then(function (characterDetail) {
+            res.send(characterDetail)
+        }).catch(function (error) {
+            console.log(error)
+            res.send("Error")
+        })
     }
 
 

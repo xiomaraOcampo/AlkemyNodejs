@@ -1,5 +1,6 @@
 const db = require('../database/models');
 const { QueryTypes } = require('sequelize');
+const { check, validationResult, body } = require('express-validator');
 
 let moviesController = {
 
@@ -34,19 +35,23 @@ let moviesController = {
     },
 
     store: function (req, res) {
-        db.Movie.create({
-            imageMovie:req.files.length > 0 ? req.files[0].filename : null.image,
-            title: req.body.title,
-            genre_id:req.body.genre_id,
-            release_date:req.body.release_date,
-            score:req.body.score
-        })
-        .then(function (newMovie) {
-            res.send(newMovie)
-        }).catch(function (error) {
-            console.log(error)
-            res.send("Error")
-        })
+
+        let errors = validationResult(req);
+        if (errors.isEmpty()) {
+        
+            db.Movie.create({
+                imageMovie:req.files.length > 0 ? req.files[0].filename : null.image,
+                title: req.body.title,
+                genre_id:req.body.genre_id,
+                release_date:req.body.release_date,
+                score:req.body.score
+            })
+            res.json({
+                msg:'movie created'
+              })
+        }else{
+            res.status(400).json({ errors: errors.errors })
+        }
     },
    
     edit:function(req,res){
@@ -72,6 +77,10 @@ let moviesController = {
                 id:req.params.id
             }
         })
+        res.json({
+            msg:'movie edited'
+          })
+
     }, 
 
     destroy:function(req,res){
@@ -80,6 +89,9 @@ let moviesController = {
                 id:req.params.id
             }
         })
+        res.json({
+            msg:'movie eliminated'
+          })
 
     },
 

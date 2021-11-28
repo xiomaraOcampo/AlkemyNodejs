@@ -5,6 +5,7 @@ const path = require ('path');
 
 
 var moviesController=require('../controllers/moviesController');
+const validations=require('../Middleware/validations');
 
 /* MULTER */ 
 
@@ -37,7 +38,7 @@ router.get('/', moviesController.search);
 
 router.get('/create', moviesController.create);
 
-router.post('/create',upload.any('imageMovie'), moviesController.store);
+router.post('/create',upload.any('imageMovie'),validations.validMovie, moviesController.store);
 
 router.get('/edit/:id', moviesController.edit);
 

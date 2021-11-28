@@ -9,6 +9,14 @@ module.exports=function(sequelize,dataTypes){
 
         name:{
             type:dataTypes.STRING
+        },
+        imageGenre:{
+            type:dataTypes.STRING(255)
+        },
+
+        movie_id:{
+            type:dataTypes.INTEGER
+
         }
         
     },{
